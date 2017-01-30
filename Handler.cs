@@ -70,7 +70,7 @@ namespace AwsDotnetCsharp
                         Content = new StringContent((current + 1).ToString())
                     });
 
-                    return current++;
+                    return current + 1;
                 }
             }
             catch
