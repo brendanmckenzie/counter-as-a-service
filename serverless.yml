@@ -1,0 +1,66 @@
+service: aws-csharp # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: dotnetcore1.0
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+package:
+  artifact: bin/release/netcoreapp1.0/publish/deploy-package.zip
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  register:
+    handler: CsharpHandlers::AwsDotnetCsharp.Handler::RegisterAsync
+    events:
+      - http:
+          path: register
+          method: post
+  increment:
+    handler: CsharpHandlers::AwsDotnetCsharp.Handler::IncrementAsync
+    events:
+      - http:
+          path: increment
+          method: post
+  get:
+    handler: CsharpHandlers::AwsDotnetCsharp.Handler::GetAsync
+    events:
+      - http:
+          path: get
+          method: get
+
+resources:
+ Resources:
+   NewResource:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: counter-as-a-service
